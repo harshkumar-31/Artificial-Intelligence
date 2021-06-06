@@ -1,0 +1,36 @@
+def isSafe(graph, color):
+	for i in range(4):
+		for j in range(i + 1, 4):
+			if (graph[i][j] and color[j] == color[i]):
+				return False
+	return True
+
+def graphColoring(graph, m, i, color,rows):
+	if (i == rows):
+		if (isSafe(graph, color)):
+			printSolution(color,rows)
+			return True
+		return False
+	for j in range(1, m + 1):
+		color[i] = j
+		if (graphColoring(graph, m, i + 1, color,rows)):
+			return True
+		color[i] = 0
+	return False
+
+def printSolution(color,rows):
+	print("Solution Exists - Following are the assigned colors: ",end = ' ')
+	for i in range(rows):
+		print(color[i],end=" ")
+	print("\n")
+
+if __name__ == '__main__':
+	rows = int(input("\nEnter the rows: "))
+	graph = []
+
+	for i in range(rows):
+		graph.append(list(map(int,input("Enter row "+str(i+1)+": ").split(' '))))
+	m = rows-1
+	color = [0 for i in range(rows)]
+	if (not graphColoring(graph, m, 0, color, rows)):
+		print ("Solution does not exist\n")
