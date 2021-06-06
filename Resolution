@@ -1,0 +1,14 @@
+from sympy.logic.boolalg import Not, And, simplify_logic
+from sympy.abc import P, Q, R
+x = P
+y = ((~P) | Q)
+z = ((~P) | (~Q) | R)
+res = Not(R)
+l = [x, y, z]
+for i in l:
+    res = And(res, i)
+print('\n'+str(res))
+if simplify_logic(res) == False:
+    print("Success\n")
+else:
+    print("Fail\n")
