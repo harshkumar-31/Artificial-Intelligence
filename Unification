@@ -1,0 +1,42 @@
+class Expr:
+    def __init__(self, op, *args):
+        self.op = str(op)
+        self.args = args
+    def __call__(self, *args):
+        if self.args:
+            raise ValueError('Can only do a call for a Symbol, not an Expr')
+        else:
+            return Expr(self.op, *args)
+    def __repr__(self):
+        op = self.op
+        args = [str(arg) for arg in self.args]
+        if op.isidentifier():  
+            return '{}({})'.format(op, ', '.join(args)) if args else op
+        elif len(args) == 1: 
+            return op + args[0]
+        else:  
+            opp = (' ' + op + ' ')
+            return '(' + opp.join(args) + ')'
+
+def is_var(x):
+    return isinstance(x, Expr) and not x.args and x.op[0].islower()
+
+def unify_var(var, val, subst):
+    subst[var] = val 
+    return subst
+
+def unify(sym1, sym2, subst):
+    if subst is False : return False
+    elif isinstance(sym1, str) and isinstance(sym2, str) and sym1 == sym2 : return subst
+    elif isinstance(sym1, str) and is_var(sym2) : return unify_var(sym2, sym1, subst)
+    elif isinstance(sym2, str) and is_var(sym1) : return unify_var(sym1, sym2, subst)
+    elif isinstance(sym1, list) and isinstance(sym2, list) : 
+        if len(sym1) == 0 and len(sym2) == 0 : return subst
+        return unify(sym1[1:],sym2[1:], unify(sym1[0], sym2[0], subst))
+    else: return False
+
+print()
+print(unify(['I', 'like', 'apples'], ['I', 'like',Expr('fruits')],{}))
+print(unify(['I', 'like', 'apples'], ['I', 'hate',Expr('fruits')],{}))
+print(unify(['p', 'q', 'a'], ['p', Expr('y'),Expr('x')],{}))
+print()
