@@ -1,0 +1,22 @@
+import math
+
+def minimax (current, index, maximiser, scores, target): 
+
+	if (current == target): 
+		return scores[index] 
+	
+	if (maximiser): 
+		val =  max(minimax(current + 1, index * 2, False, scores, target), minimax(current + 1, index * 2 + 1, False, scores, target)) 
+		print("The max value: "+str(val))
+		return val
+	else: 
+		val =  min(minimax(current + 1, index * 2, True, scores, target), minimax(current + 1, index * 2 + 1, True, scores, target)) 
+		print("The min value: "+str(val))
+		return val
+	
+final = [5, 3, 4, 7] 
+
+depth = math.log(len(final), 2) 
+
+ans = minimax(0, 0, True, final, depth)
+print("The optimal value is : "+str(ans)) 
